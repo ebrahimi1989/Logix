@@ -42,6 +42,8 @@ struct LoggerConfig {
     std::string filePath;
     std::string networkIp;
     uint16_t networkPort = 0;
+    size_t fileSizeMb = 1;
+    size_t numberOfLogFiles = 1;
     std::string logLevel = "debug";
     std::string logPattern = "%Y-%m-%d %H:%M:%S.%e [%n] [%l] %v"; // Default pattern
     std::string udpFormat = "json"; // Default: JSON for UDP sink

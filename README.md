@@ -116,6 +116,8 @@ Configure the logger by setting these environment variables before running your 
 | `LOG_NETWORK_PORT`   | The port for the UDP sink.                                                                              | `12201`                                             | `0`                 |
 | `LOG_UDP_FORMAT`     | The format for UDP messages. Options: `json` or `plain`.                                                | `json`                                              | `json`              |
 | `LOG_PATTERN`        | The pattern for formatting log messages. See spdlog's documentation for syntax.                         | `%Y-%m-%d %H:%M:%S.%e [%l] %v`                      | (Default pattern)   |
+| `LOG_FILE_SIZE_MB`        | Sets the maximum size for a single log file in megabytes (MB). Once this size is reached, the file is rotated.	                         | 10                      | 1   |
+| `LOG_NUMBER_OF_LOGS`        | Defines the total number of log files to keep (1 active + N-1 archives). The oldest file is deleted on rotation.                      | 5                       | 3   |
 
 **Example Bash export:**
 ```bash

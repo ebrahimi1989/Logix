@@ -131,6 +131,34 @@ LoggerConfig LoggerConfig::loadFromEnv() {
         config.networkIp = ipStr;
     }
 
+    const char* fileSizeStr = std::getenv("LOG_FILE_SIZE_MB");
+    if (fileSizeStr) {
+        try {
+            int size = std::stoi(fileSizeStr);
+            if (size > 0) {
+                config.fileSizeMb = static_cast<size_t>(size);
+            } else {
+                spdlog::warn("LOG_FILE_SIZE_MB must be a positive number. Using default {}MB.", config.fileSizeMb);
+            }
+        } catch (const std::exception& e) {
+            spdlog::warn("Invalid LOG_FILE_SIZE_MB value: {}. Using default {}MB.", fileSizeStr, config.fileSizeMb);
+        }
+    }
+
+    const char* numberOfLogFilesStr = std::getenv("LOG_NIMBER_OF_LOG_FILES");
+    if (numberOfLogFilesStr) {
+        try {
+            int size = std::stoi(numberOfLogFilesStr);
+            if (size > 0) {
+                config.numberOfLogFiles = static_cast<size_t>(size);
+            } else {
+                spdlog::warn("LOG_NIMBER_OF_LOG_FILES number of log files. Using default {}.", config.numberOfLogFiles);
+            }
+        } catch (const std::exception& e) {
+            spdlog::warn("Invalid LOG_NIMBER_OF_LOG_FILES value: {}. Using default {}.", numberOfLogFilesStr, config.numberOfLogFiles);
+        }
+    }
+
     const char* portStr = std::getenv("LOG_NETWORK_PORT");
     if (portStr) {
         try {
@@ -225,7 +253,7 @@ void LoggerFacade::initialize() {
 
                             // Use rotating file sink
                             auto fileSink = std::make_shared<spdlog::sinks::rotating_file_sink_mt>(
-                                config.filePath, 1024 * 1024 * 5, 3); // 5MB, 3 files
+                                config.filePath, 1024 * 1024 * config.fileSizeMb, 3); // 5MB, 3 files
                             fileSink->set_level(logLevel);
                             fileSink->set_pattern(config.logPattern);
                             fileSink->log(spdlog::details::log_msg("", spdlog::level::info, "Initial test log to file"));
